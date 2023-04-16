@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import org.example.ada.GlideApp
+import com.bumptech.glide.Glide
 import org.example.ada.R
 
 class PostAdapter(var context: Context, private val itemList: ArrayList<PostItem>): RecyclerView.Adapter<PostAdapter.ViewHolder>() {
@@ -36,10 +36,10 @@ class PostAdapter(var context: Context, private val itemList: ArrayList<PostItem
         holder.UserId_down.text = itemList.get(position).UserId
         holder.LikeNumber.text = itemList.get(position).LikeNumber
         if(itemList.get(position).UserImage != "") {
-            GlideApp.with(context).load(itemList.get(position).UserImage).into(holder.Userimage)
+            Glide.with(context).load(itemList.get(position).UserImage).into(holder.Userimage)
         } else {
-            GlideApp.with(context).load(R.drawable.ic_user_photo).into(holder.Userimage)
+            Glide.with(context).load(R.drawable.ic_user_photo).into(holder.Userimage)
         }
-        GlideApp.with(context).load(itemList.get(position).imageUrl).into(holder.imageIv)
+        Glide.with(context).load(itemList.get(position).imageUrl).into(holder.imageIv)
     }
 }

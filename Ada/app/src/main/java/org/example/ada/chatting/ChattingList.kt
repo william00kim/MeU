@@ -33,6 +33,7 @@ class ChattingList : AppCompatActivity() {
     val today = date.format(CurrentTime)
 
     var MyId = ""
+    var ChatName = ""
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,8 +50,9 @@ class ChattingList : AppCompatActivity() {
         db.collection("UserId").document(currentUser).get().addOnSuccessListener { result ->
             opponent = result.get("connect").toString()
             MyId = result.get("UserName").toString()
+            ChatName = result.get("chatName").toString()
 
-            db.collection("UserChat").addSnapshotListener { result, e ->
+            db.collection("UserChat").document(ChatName).collection("Chat").addSnapshotListener { result, e ->
                 if (result != null) {
                     for (doc in result.documentChanges) {
                         Log.d(TAG, "변화")
@@ -80,7 +82,7 @@ class ChattingList : AppCompatActivity() {
                 Toast.makeText(this, "메세지를 입력하세요.", Toast.LENGTH_SHORT).show()
             } else {
                 MessageNumber++
-                db.collection("UserChat").document(MessageNumber.toString()).set(
+                db.collection("UserChat").document(ChatName).collection("Chat").document(MessageNumber.toString()).set(
                     hashMapOf(
                         "OpponentId" to opponent,
                         "ChattingLog" to MyId,
@@ -110,8 +112,9 @@ class ChattingList : AppCompatActivity() {
         db.collection("UserId").document(currentUser.toString()).get().addOnSuccessListener { result ->
             opponent = result.get("connect").toString()
             MyId = result.get("UserName").toString()
+            ChatName = result.get("chatName").toString()
 
-            db.collection("UserChat").get().addOnSuccessListener { result ->
+            db.collection("UserChat").document(ChatName).collection("chat").get().addOnSuccessListener { result ->
                 if(result != null) {
                     for(document in result){
                         MessageNumber++

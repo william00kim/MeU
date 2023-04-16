@@ -1,4 +1,4 @@
-package org.example.ada
+package org.example.ada.spacialDay
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import org.example.ada.R
+
 class ContentAdapter(val context: Context, private val dataset: MutableList<Content>): BaseAdapter(){
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View = LayoutInflater.from(context).inflate(R.layout.content_recyclerview_item, null)

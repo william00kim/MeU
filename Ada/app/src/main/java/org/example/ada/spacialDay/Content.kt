@@ -1,4 +1,4 @@
-package org.example.ada
+package org.example.ada.spacialDay
 
 data class Content(
     val ContentTitle: String,

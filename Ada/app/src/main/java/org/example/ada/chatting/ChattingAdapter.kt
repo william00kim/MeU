@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import org.example.ada.GlideApp
+import com.bumptech.glide.Glide
 import org.example.ada.R
 
 class ChattingAdapter(var context: Context, var messageList:ArrayList<Message>): RecyclerView.Adapter<ChattingAdapter.ViewHolder>() {
@@ -39,18 +39,18 @@ class ChattingAdapter(var context: Context, var messageList:ArrayList<Message>):
             holder.Text.text = messageList.get(position).Text
             holder.date.text = messageList.get(position).Date
             if(messageList.get(position).Image != "") {
-                GlideApp.with(context).load(messageList.get(position).Image).into(holder.Photo)
+                Glide.with(context).load(messageList.get(position).Image).into(holder.Photo)
             } else {
-                GlideApp.with(context).load(R.drawable.ic_user_photo).into(holder.Photo)
+                Glide.with(context).load(R.drawable.ic_user_photo).into(holder.Photo)
             }
             holder.OChat.isVisible = false
         } else if(messageList.get(position).State == "Opponent"){
             holder.Text2.text = messageList.get(position).Text
             holder.date2.text = messageList.get(position).Date
             if(messageList.get(position).Image != "") {
-                GlideApp.with(context).load(messageList.get(position).Image).into(holder.Photo2)
+                Glide.with(context).load(messageList.get(position).Image).into(holder.Photo2)
             } else {
-                GlideApp.with(context).load(R.drawable.ic_user_photo).into(holder.Photo2)
+                Glide.with(context).load(R.drawable.ic_user_photo).into(holder.Photo2)
             }
             holder.MChat.isVisible = false
         }

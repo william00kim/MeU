@@ -1,28 +1,27 @@
-package org.example.ada
+package org.example.ada.spacialDay
 
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.StateSet.TAG
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_dairy.*
 import kotlinx.android.synthetic.main.activity_dairy.Btn_back
 import kotlinx.android.synthetic.main.activity_special_day.*
-import kotlin.properties.Delegates
+import org.example.ada.R
 
 class special_day_activity : AppCompatActivity() {
 
     lateinit var auth: FirebaseAuth
 
     val db = Firebase.firestore
+    var OurName = ""
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,13 +31,9 @@ class special_day_activity : AppCompatActivity() {
         auth = Firebase.auth
 
         val currentUser = auth.currentUser?.uid!!
-
         var selectdate = ""
-
         var importantColor = ""
-
         var datanumber = 0
-
         var gettingdata = ""
 
         Btn_back.setOnClickListener {
@@ -61,13 +56,15 @@ class special_day_activity : AppCompatActivity() {
             if(selectdate == "") {
               Toast.makeText(this, "날짜를 입력해주세요",Toast.LENGTH_SHORT).show()
             } else {
-                val dataset = db.collection("UserContent").document(currentUser).collection(selectdate)
+                db.collection("UserId").document(currentUser).get().addOnSuccessListener { result ->
+                    OurName = result.get("chatName").toString()
 
-                dataset.get().addOnSuccessListener { result ->
-                    if(result != null){
-                        for(document in result){
-                            datanumber = result.size()
-                            Log.d(TAG, "데이터 갯수: ${datanumber}")
+                    db.collection("UserContent").document(OurName).collection(selectdate).get().addOnSuccessListener{ result ->
+                        if(result != null){
+                            for(document in result){
+                                datanumber = result.size()
+                                Log.d(TAG, "데이터 갯수: ${datanumber}")
+                            }
                         }
                     }
                 }
@@ -90,16 +87,19 @@ class special_day_activity : AppCompatActivity() {
             } else if(contentTitle == "") {
                 Toast.makeText(this, "일정 제목을 입력하세요.", Toast.LENGTH_SHORT).show()
             } else {
-                val dataset = db.collection("UserContent").document(currentUser).collection(selectdate)
+                db.collection("UserId").document(currentUser).get().addOnSuccessListener { result ->
+                    OurName = result.get("chatName").toString()
+                    val dataset = db.collection("UserContent").document(OurName).collection(selectdate)
 
-                dataset.document(setdatanumber).set(inputdata)
-                    .addOnSuccessListener {
-                        Toast.makeText(this, "데이터 저장 완료",Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(this, "데이터 저장 실패", Toast.LENGTH_SHORT).show()
-                    }
-                finish()
+                    dataset.document(setdatanumber).set(inputdata)
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "데이터 저장 완료", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(this, "데이터 저장 실패", Toast.LENGTH_SHORT).show()
+                        }
+                    finish()
+                }
             }
         }
 

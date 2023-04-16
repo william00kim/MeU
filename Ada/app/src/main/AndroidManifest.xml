@@ -61,7 +61,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".special_day_activity"
+            android:name=".spacialDay.special_day_activity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -116,7 +116,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".DdayActivity"
+            android:name=".spacialDay.DdayActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

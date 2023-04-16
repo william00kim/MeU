@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".special_day_activity">
+    tools:context=".spacialDay.special_day_activity">
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -24,6 +24,7 @@ import org.example.ada.chatting.ChattingList
 import org.example.ada.diary.DairyActivity
 import org.example.ada.setting.ConnectPushDialog
 import org.example.ada.setting.SettingActivity
+import org.example.ada.spacialDay.DdayActivity
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
@@ -119,11 +120,13 @@ class MainActivity : AppCompatActivity() {
                             if(data != "=") {
                                 val YesMyData = hashMapOf(
                                     "connectresult" to "Yes",
-                                    "connect" to data
+                                    "connect" to data,
+                                    "chatName" to "$MyName, $data"
                                 )
                                 val YesOpponentData = hashMapOf(
                                     "connectresult" to "Yes",
-                                    "connect" to MyName
+                                    "connect" to MyName,
+                                    "chatName" to "$MyName, $data"
                                 )
                                 db.collection("UserId").document(opponentUid).update(YesOpponentData as Map<String, Any>)
                                 db.collection("UserId").document(CurrentUser).update(YesMyData as Map<String, Any>)
