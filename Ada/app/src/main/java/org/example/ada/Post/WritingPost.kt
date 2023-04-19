@@ -110,19 +110,20 @@ class WritingPost : AppCompatActivity() {
 
         val CurrentUser = auth.currentUser?.uid!!
 
-        var Post = posting.editableText.toString()
+        var Post = PostingWrite.editableText.toString()
 
-        MyPostNumber += 1
+        var head = ArticleHeadWrite.editableText.toString()
 
         val inputdata = hashMapOf(
             "이름" to UserName,
             "이미지" to "${phototitle}.png",
             "게시글" to Post,
-            "유저 아이디" to CurrentUser
+            "제목" to head,
+            "유저 아이디" to CurrentUser,
+            "좋아요" to 0
         )
 
-
-        db.collection("UserPost").document("$MyPostNumber").set(inputdata)
+        db.collection("UserPost").document(head).set(inputdata)
             .addOnSuccessListener {
                 if (imageUri != null) {
                     uploadPhoto(
@@ -173,16 +174,6 @@ class WritingPost : AppCompatActivity() {
         db.collection("UserId").document(currentUser).get()
             .addOnSuccessListener { result ->
                 UserName = result.data!!["UserName"].toString()
-            }
-
-        db.collection("UserPost").get()
-            .addOnSuccessListener { result ->
-                if(result != null)
-                    for(document in result){
-                        MyPostNumber += 1
-                } else {
-                    MyPostNumber = 0
-                }
             }
     }
 }

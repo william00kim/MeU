@@ -88,7 +88,7 @@ class DdayActivity : AppCompatActivity() {
         }
 
         AddContent.setOnClickListener {
-            val SpecialIntent = Intent(this, special_day_activity::class.java)
+            val SpecialIntent = Intent(this, Special_day_activity::class.java)
             startActivity(SpecialIntent)
         }
     }

@@ -3,6 +3,7 @@ package org.example.ada.chatting
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.ScrollView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -92,6 +93,7 @@ class ChattingList : AppCompatActivity() {
                         "turn" to MessageNumber
                     )
                 )
+                ChattingScroll.fullScroll(ScrollView.FOCUS_DOWN)
                 ChattingText.setText("")
             }
         }
@@ -132,5 +134,6 @@ class ChattingList : AppCompatActivity() {
                 }
             }
         }
+        ChattingScroll.fullScroll(ScrollView.FOCUS_DOWN)
     }
 }

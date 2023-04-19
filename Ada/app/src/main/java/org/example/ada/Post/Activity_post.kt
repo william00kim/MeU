@@ -26,6 +26,9 @@ class activity_post : AppCompatActivity() {
     var photo_Uri = ""
     var UserId = ""
     var UserImage = ""
+    var LikeNum = ""
+    var selectPost = ""
+    var head = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +50,7 @@ class activity_post : AppCompatActivity() {
         setting.setOnClickListener{
             startActivity(SettingIntent)
         }
+
     }
 
     private fun loadpage() {
@@ -70,8 +74,10 @@ class activity_post : AppCompatActivity() {
                                         }
                                     UserId = document.data?.get("이름").toString()
                                     Log.d(TAG, "$UserId")
+                                    head = document.data?.get("제목").toString()
                                     article = document.data?.get("게시글").toString()
-                                    PostingContent.add(PostItem(UserId, photo.toString(), article, "0",UserImage))
+                                    LikeNum = document.data?.get("좋아요").toString()
+                                    PostingContent.add(PostItem(UserId, photo.toString(),head, article, LikeNum,UserImage))
                                     PostList.adapter = PostAdapter(this, PostingContent)
                                 } else {
                                     PostingContent.clear()
@@ -85,6 +91,8 @@ class activity_post : AppCompatActivity() {
                                 PostList.adapter = Adapter
                             }
                     }
+                } else {
+
                 }
             }
     }

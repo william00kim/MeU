@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_dairy.Btn_back
 import kotlinx.android.synthetic.main.activity_special_day.*
 import org.example.ada.R
 
-class special_day_activity : AppCompatActivity() {
+class Special_day_activity : AppCompatActivity() {
 
     lateinit var auth: FirebaseAuth
 
