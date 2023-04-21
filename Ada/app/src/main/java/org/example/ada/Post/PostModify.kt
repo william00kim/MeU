@@ -65,6 +65,10 @@ class PostModify : AppCompatActivity() {
             CancelModify.setOnClickListener {
                 finish()
             }
+
+            BackButton.setOnClickListener {
+                finish()
+            }
         }
     }
 

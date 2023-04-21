@@ -22,7 +22,7 @@
             android:layout_height="150dp"
             android:layout_weight="0"
             android:paddingTop="70dp"
-            android:text="Ada"
+            android:text="MeU"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="25sp"

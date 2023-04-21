@@ -105,14 +105,22 @@ class SettingActivity : AppCompatActivity() {
         }
 
         Connect.setOnClickListener {
-            val dialog = ConnectPersonDialog(this)
-            dialog.showDialog()
-            dialog.setOnClickListener(object : ConnectPersonDialog.OnDialogClickListener2 {
-                override fun onClicked(name: String) {
-                    ConnectedId.text = name
-                    connectName = name
+            db.collection("UserId").document(currentUser).get().addOnSuccessListener { res ->
+                var connectResult = res.data?.get("connectresult").toString()
+                if(connectResult == null || connectResult == "No"){
+                    val dialog = ConnectPersonDialog(this)
+                    dialog.showDialog()
+                    dialog.setOnClickListener(object : ConnectPersonDialog.OnDialogClickListener2 {
+                        override fun onClicked(name: String) {
+                            ConnectedId.text = name
+                            connectName = name
+                        }
+                    })
+                } else {
+                    Toast.makeText(this, "이미 연결되어있습니다!",Toast.LENGTH_SHORT).show()
                 }
-            })
+            }
+
         }
     }
 

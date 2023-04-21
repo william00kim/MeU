@@ -22,7 +22,6 @@ class ChattingAdapter(var context: Context, var messageList:ArrayList<Message>):
         var date2: TextView = messageview.findViewById(R.id.date2)
         var MChat: View = messageview.findViewById(R.id.ChatLayout)
         var OChat: View = messageview.findViewById(R.id.OLayout)
-
     }
 
     override fun getItemCount(): Int {
@@ -30,7 +29,7 @@ class ChattingAdapter(var context: Context, var messageList:ArrayList<Message>):
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        var view = LayoutInflater.from(context).inflate(R.layout.chatting_recyclerview_item, parent, false)
+        var view = LayoutInflater.from(context).inflate(R.layout.chatting_recyclerview_item, parent, true)
         return ViewHolder(view)
     }
 
