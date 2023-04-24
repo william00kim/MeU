@@ -17,6 +17,13 @@
         android:theme="@style/Theme.Ada"
         tools:targetApi="31">
         <activity
+            android:name=".setting.CutOpponentDialog"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".Post.PostModify"
             android:exported="false">
             <meta-data

@@ -120,8 +120,13 @@ class SettingActivity : AppCompatActivity() {
                     Toast.makeText(this, "이미 연결되어있습니다!",Toast.LENGTH_SHORT).show()
                 }
             }
-
         }
+
+        CutOpponent.setOnClickListener {
+            val dialog = CutOpponentDialog(this)
+            dialog.showDialog()
+        }
+
     }
 
     override fun onBackPressed() {
@@ -146,9 +151,7 @@ class SettingActivity : AppCompatActivity() {
             }
 
         } else if(ModifyDataType == "settingDay") {
-
             val updatesettingday = db.collection("UserId").document(currentUser).update("UserSettingDate",ModifyData)
-
             updatesettingday.addOnSuccessListener {
             }
         } else if(ModifyDataType == "Dday") {

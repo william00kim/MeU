@@ -29,7 +29,7 @@ class ChattingAdapter(var context: Context, var messageList:ArrayList<Message>):
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        var view = LayoutInflater.from(context).inflate(R.layout.chatting_recyclerview_item, parent, true)
+        var view = LayoutInflater.from(context).inflate(R.layout.chatting_recyclerview_item, parent, false)
         return ViewHolder(view)
     }
 

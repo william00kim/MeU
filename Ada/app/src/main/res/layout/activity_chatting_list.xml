@@ -54,14 +54,14 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="20">
+            android:layout_weight="30">
 
             <ScrollView
                 android:id="@+id/ChattingScroll"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="bottom|end"
-                android:duplicateParentState="true"
+                android:duplicateParentState="false"
                 android:fadeScrollbars="true"
                 android:fillViewport="true">
 

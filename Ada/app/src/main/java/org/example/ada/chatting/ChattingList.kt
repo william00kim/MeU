@@ -3,7 +3,6 @@ package org.example.ada.chatting
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.ScrollView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -42,9 +41,9 @@ class ChattingList : AppCompatActivity() {
         setContentView(R.layout.activity_chatting_list)
         val ChattingContent = ArrayList<Message>()
 
+        ChattingList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        ChattingList.setHasFixedSize(true)
         auth = Firebase.auth
-
-        loaddata()
 
         val currentUser = auth.currentUser!!.uid
 
@@ -57,7 +56,6 @@ class ChattingList : AppCompatActivity() {
                 if (result != null) {
                     for (doc in result.documentChanges) {
                         Log.d(TAG, "변화")
-                        MessageNumber++
                         if (doc.document["ChattingLog"].toString() == MyId) {
                             ChattingContent.add(
                                 Message(doc.document["turn"].toString().toInt(), "Me", doc.document["ChattingLog"].toString(), "", doc.document["Mychat"].toString(), doc.document["time"].toString()
@@ -69,20 +67,22 @@ class ChattingList : AppCompatActivity() {
                                 )
                             )
                         }
+                        MessageNumber++
                         ChattingContent.sortBy(Message::turn)
                         for (i in 1..MessageNumber) {
                             ChattingList.adapter = ChattingAdapter(this, ChattingContent)
                         }
+                        ChattingList.scrollToPosition(result.size())
                     }
                 }
             }
         }
 
         Btn_send.setOnClickListener {
+            Log.e(TAG, "$MessageNumber")
             if (ChattingText.text.toString() == "" || ChattingText.text == null) {
                 Toast.makeText(this, "메세지를 입력하세요.", Toast.LENGTH_SHORT).show()
             } else {
-                MessageNumber++
                 db.collection("UserChat").document(ChatName).collection("Chat").document(MessageNumber.toString()).set(
                     hashMapOf(
                         "OpponentId" to opponent,
@@ -93,7 +93,6 @@ class ChattingList : AppCompatActivity() {
                         "turn" to MessageNumber
                     )
                 )
-                ChattingScroll.fullScroll(ScrollView.FOCUS_DOWN)
                 ChattingText.setText("")
             }
         }
@@ -102,38 +101,5 @@ class ChattingList : AppCompatActivity() {
             finish()
         }
 
-    }
-
-    private fun loaddata() {
-        auth = Firebase.auth
-        val currentUser = auth.currentUser?.uid
-        val ChattingContent = ArrayList<Message>()
-        ChattingList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        ChattingList.setHasFixedSize(true)
-
-        db.collection("UserId").document(currentUser.toString()).get().addOnSuccessListener { result ->
-            opponent = result.get("connect").toString()
-            MyId = result.get("UserName").toString()
-            ChatName = result.get("chatName").toString()
-
-            db.collection("UserChat").document(ChatName).collection("chat").get().addOnSuccessListener { result ->
-                if(result != null) {
-                    for(document in result){
-                        MessageNumber++
-                        Log.e(TAG,"아이디: $MyId")
-                        if(document.data["ChattingLog"].toString() != MyId){
-                            ChattingContent.add(Message(document.data["turn"].toString().toInt(),"Opponent",document.data["ChattingLog"].toString(),"",document.data["Mychat"].toString(),document.data["time"].toString()))
-                        } else {
-                            ChattingContent.add(Message(document.data["turn"].toString().toInt(),"Me",document.data["ChattingLog"].toString(),"", document.data["Mychat"].toString(),document.data["time"].toString()))
-                        }
-                        ChattingContent.sortBy(Message::turn)
-                        for(i in 1..MessageNumber){
-                            ChattingList.adapter = ChattingAdapter(this, ChattingContent)
-                        }
-                    }
-                }
-            }
-        }
-        ChattingScroll.fullScroll(ScrollView.FOCUS_DOWN)
     }
 }

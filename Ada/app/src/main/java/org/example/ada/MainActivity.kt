@@ -81,7 +81,11 @@ class MainActivity : AppCompatActivity() {
         val ChattingActivity = Intent(this, ChattingList::class.java)
 
         Btn_chatting.setOnClickListener{
-            startActivity(ChattingActivity)
+            if(ConnectMyLove == null || ConnectMyLove == "") {
+                Toast.makeText(this, "상대방과 연결되지 않았습니다.",Toast.LENGTH_SHORT).show()
+            } else {
+                startActivity(ChattingActivity)
+            }
         }
     }
 
