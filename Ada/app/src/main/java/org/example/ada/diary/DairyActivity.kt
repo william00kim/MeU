@@ -54,20 +54,25 @@ class DairyActivity :AppCompatActivity() {
 
         val intent = Intent(this, MainActivity::class.java)
         var resultMyThink = ed_mythink.text.toString()
-        val inputdata = hashMapOf(
-            "MyData" to resultMyThink
-        )
 
-        db.collection("UserDiary").document(currentUser).collection(today.toString()).document("MyDiary").set(inputdata)
-            .addOnSuccessListener {
-                finish()
-            }
-            .addOnFailureListener {
-                Toast.makeText(this,"알수 없는 오류 발생",Toast.LENGTH_SHORT).show()
-            }
+        db.collection("UserId").document(currentUser).get().addOnSuccessListener { res ->
+            val chatName = res.data?.get("chatName").toString()
+            val myId = res.data?.get("UserName").toString()
+            val inputdata = hashMapOf(
+                "Name" to myId,
+                "Data" to resultMyThink,
+                "Date" to today.toString()
+            )
 
-        startActivity(intent)
-        finish()
+            db.collection("UserDiary").document(chatName).collection(myId).document(today.toString()).set(inputdata)
+                .addOnSuccessListener {
+                    Toast.makeText(this,"성공",Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this,"알수 없는 오류 발생", Toast.LENGTH_SHORT).show()
+                }
+        }
     }
 
     override fun onBackPressed() {

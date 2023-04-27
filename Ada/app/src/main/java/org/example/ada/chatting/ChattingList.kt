@@ -33,7 +33,6 @@ class ChattingList : AppCompatActivity() {
     val today = date.format(CurrentTime)
 
     var MyId = ""
-    var ChatName = ""
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,50 +49,66 @@ class ChattingList : AppCompatActivity() {
         db.collection("UserId").document(currentUser).get().addOnSuccessListener { result ->
             opponent = result.get("connect").toString()
             MyId = result.get("UserName").toString()
-            ChatName = result.get("chatName").toString()
+            val ChatName = result.get("chatName").toString()
 
-            db.collection("UserChat").document(ChatName).collection("Chat").addSnapshotListener { result, e ->
-                if (result != null) {
-                    for (doc in result.documentChanges) {
-                        Log.d(TAG, "변화")
-                        if (doc.document["ChattingLog"].toString() == MyId) {
-                            ChattingContent.add(
-                                Message(doc.document["turn"].toString().toInt(), "Me", doc.document["ChattingLog"].toString(), "", doc.document["Mychat"].toString(), doc.document["time"].toString()
+            db.collection("UserChat").document(ChatName).collection("Chat")
+                .addSnapshotListener { result, e ->
+                    if (result != null) {
+                        for (doc in result.documentChanges) {
+                            Log.d(TAG, "변화")
+                            if (doc.document["ChattingLog"].toString() == MyId) {
+                                ChattingContent.add(
+                                    Message(
+                                        doc.document["turn"].toString().toInt(),
+                                        "Me",
+                                        doc.document["ChattingLog"].toString(),
+                                        "",
+                                        doc.document["Mychat"].toString(),
+                                        doc.document["time"].toString()
+                                    )
                                 )
-                            )
-                        } else {
-                            ChattingContent.add(
-                                Message(doc.document["turn"].toString().toInt(), "Opponent", doc.document["ChattingLog"].toString(), "", doc.document["Mychat"].toString(), doc.document["time"].toString()
+                            } else {
+                                ChattingContent.add(
+                                    Message(
+                                        doc.document["turn"].toString().toInt(),
+                                        "Opponent",
+                                        doc.document["ChattingLog"].toString(),
+                                        "",
+                                        doc.document["Mychat"].toString(),
+                                        doc.document["time"].toString()
+                                    )
                                 )
-                            )
+                            }
+                            MessageNumber++
+                            ChattingContent.sortBy(Message::turn)
+                            for (i in 1..MessageNumber) {
+                                ChattingList.adapter = ChattingAdapter(this, ChattingContent)
+                            }
+                            ChattingList.scrollToPosition(result.size())
                         }
-                        MessageNumber++
-                        ChattingContent.sortBy(Message::turn)
-                        for (i in 1..MessageNumber) {
-                            ChattingList.adapter = ChattingAdapter(this, ChattingContent)
-                        }
-                        ChattingList.scrollToPosition(result.size())
                     }
                 }
-            }
-        }
 
-        Btn_send.setOnClickListener {
-            Log.e(TAG, "$MessageNumber")
-            if (ChattingText.text.toString() == "" || ChattingText.text == null) {
-                Toast.makeText(this, "메세지를 입력하세요.", Toast.LENGTH_SHORT).show()
-            } else {
-                db.collection("UserChat").document(ChatName).collection("Chat").document(MessageNumber.toString()).set(
-                    hashMapOf(
-                        "OpponentId" to opponent,
-                        "ChattingLog" to MyId,
-                        "Image" to "",
-                        "Mychat" to ChattingText.text.toString(),
-                        "time" to today + "-" + CurrentTimeSet,
-                        "turn" to MessageNumber
-                    )
-                )
-                ChattingText.setText("")
+            Btn_send.setOnClickListener {
+                Log.e(TAG, "$MessageNumber")
+                db.collection("UserId").document(currentUser).get().addOnSuccessListener { res ->
+                    val chatName = res.data?.get("chatName").toString()
+                    if (ChattingText.text.toString() == "" || ChattingText.text == null) {
+                        Toast.makeText(this, "메세지를 입력하세요.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        db.collection("UserChat").document(chatName).collection("Chat").document(MessageNumber.toString()).set(
+                            hashMapOf(
+                                "OpponentId" to opponent,
+                                "ChattingLog" to MyId,
+                                "Image" to "",
+                                "Mychat" to ChattingText.text.toString(),
+                                "time" to today + " " + CurrentTimeSet,
+                                "turn" to MessageNumber
+                            )
+                        )
+                        ChattingText.setText("")
+                    }
+                }
             }
         }
 

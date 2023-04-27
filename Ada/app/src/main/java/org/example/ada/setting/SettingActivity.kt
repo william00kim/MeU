@@ -123,8 +123,15 @@ class SettingActivity : AppCompatActivity() {
         }
 
         CutOpponent.setOnClickListener {
-            val dialog = CutOpponentDialog(this)
-            dialog.showDialog()
+            db.collection("UserId").document(currentUser).get().addOnSuccessListener { res ->
+                val connect = res.data?.get("connect").toString()
+                if(connect != null && connect != "null" && connect != "" && connect != "="){
+                    val dialog = CutOpponentDialog(this)
+                    dialog.showDialog()
+                } else {
+                    Toast.makeText(this, "연결된 사람이 없습니다",Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
     }

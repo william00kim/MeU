@@ -72,9 +72,8 @@ class ConnectPersonDialog(context: Context) {
                                 db.collection("UserId").document(currentUser.toString()).update("connectresult", "No")
 
                                 val connectdata = hashMapOf(
-                                    "connectresult" to "No",
-                                    "wantconnect" to MyName,
-                                    "connect" to "No"
+                                    "connectresult" to "Ing",
+                                    "wantconnect" to MyName
                                 )
 
                                 db.collection("UserId").document(searchUserUid).update(connectdata as Map<String, Any>)

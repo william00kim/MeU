@@ -2,7 +2,9 @@ package org.example.ada.setting
 
 import android.app.Dialog
 import android.content.Context
+import android.util.Log
 import android.view.WindowManager
+import androidx.constraintlayout.widget.StateSet.TAG
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -15,7 +17,7 @@ class CutOpponentDialog(context: Context) {
     lateinit var auth: FirebaseAuth
     var opponentUid = ""
     var opponentId = ""
-    var chatName = ""
+    var MyId = ""
 
     private val dialog = Dialog(context)
     private lateinit var onclickListener: OnDialogClickListenerCutOpponent
@@ -33,8 +35,6 @@ class CutOpponentDialog(context: Context) {
         auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser!!.uid
 
-        var wantConnect = ""
-
         dialog.setContentView(R.layout.activity_cut_opponent_dialog)
         dialog.window!!.setLayout(
             WindowManager.LayoutParams.WRAP_CONTENT,
@@ -46,8 +46,8 @@ class CutOpponentDialog(context: Context) {
 
         dialog.CutYes.setOnClickListener {
             db.collection("UserId").document(currentUser).get().addOnSuccessListener { result ->
-                chatName = result.data?.get("chatName").toString()
                 opponentId = result.data?.get("connect").toString()
+                MyId = result.data?.get("UserName").toString()
 
                 val updates = hashMapOf(
                     "connect" to FieldValue.delete(),
@@ -60,21 +60,38 @@ class CutOpponentDialog(context: Context) {
                     for (document in result) {
                         val searchUserId = document.data?.get("UserName").toString()
                         val searchUid = document.data?.get("UserUid").toString()
-                        if (searchUserId == wantConnect) {
-                            this.opponentId = searchUserId
+                        val chatName = document.data?.get("chatName").toString()
+                        if (searchUserId == opponentId) {
                             this.opponentUid = searchUid
+                            Log.e(TAG, "우리 이름: $chatName")
 
-
-                            db.collection("UserContent").document(chatName).delete()
-                            db.collection("UserChat").document(chatName).delete()
-                            db.collection("UserDiary").document(chatName).delete()
+                            //체팅기록 삭제
+                            db.collection("UserChat").document(chatName).collection("Chat").get().addOnSuccessListener { res ->
+                                for (doc in res){
+                                    val number = doc.data?.get("turn").toString()
+                                    db.collection("UserChat").document(chatName).collection("Chat").document(number).delete()
+                                }
+                            }
+                            db.collection("UserDiary").document(chatName).collection(MyId).get().addOnSuccessListener { res ->
+                                for(doc in res){
+                                    val date = doc.data?.get("Date").toString()
+                                    db.collection("UserDiary").document(chatName).collection(MyId).document(date).delete()
+                                }
+                            }
+                            db.collection("UserDiary").document(chatName).collection(opponentId).get().addOnSuccessListener { res ->
+                                for(doc in res){
+                                    val date = doc.data?.get("Date").toString()
+                                    db.collection("UserDiary").document(chatName).collection(opponentId).document(date).delete()
+                                }
+                            }
+                            db.collection("User")
                             db.collection("UserId").document(currentUser).update(updates)
                             db.collection("UserId").document(opponentUid).update(updates)
-                            dialog.dismiss()
                         }
                     }
                 }
             }
+            dialog.dismiss()
         }
 
         dialog.Cancel.setOnClickListener {

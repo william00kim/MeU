@@ -61,31 +61,29 @@ class DdayActivity : AppCompatActivity() {
 
             db.collection("UserId").document(CurrentUser).get().addOnSuccessListener { result ->
                 OurName = result.get("chatName").toString()
-
-                db.collection("UserContent").document(OurName).collection(selecteddate).get()
-                    .addOnSuccessListener { result ->
-                        if(result.isEmpty) {
-                            UserContent.add(Content("일정을 추가해주세요.", "gray"))
-                            val Adapter = ContentAdapter(this, UserContent)
-                            ListView.adapter = Adapter
-                        } else {
-                            if (result != null) {
-                                UserContent.clear()
-                                for (document in result) {
-                                    ColorData = document.data?.get("color").toString()
-                                    ContentData = document.data?.get("contentTitle").toString()
-                                    UserContent.add(Content(ContentData, ColorData))
-                                    val Adapter = ContentAdapter(this, UserContent)
-                                    ListView.adapter = Adapter
+                if(OurName != null && OurName != "" && OurName != "null" && OurName != "=" ){
+                    db.collection("UserContent").document(OurName).collection(selecteddate).get()
+                        .addOnSuccessListener { result ->
+                            if(result.isEmpty) {
+                                UserContent.add(Content("일정을 추가해주세요.", "gray"))
+                                val Adapter = ContentAdapter(this, UserContent)
+                                ListView.adapter = Adapter
+                            } else {
+                                if (result != null) {
+                                    UserContent.clear()
+                                    for (document in result) {
+                                        ColorData = document.data?.get("color").toString()
+                                        ContentData = document.data?.get("contentTitle").toString()
+                                        UserContent.add(Content(ContentData, ColorData))
+                                        val Adapter = ContentAdapter(this, UserContent)
+                                        ListView.adapter = Adapter
+                                    }
                                 }
                             }
                         }
                     }
-                    .addOnFailureListener {
-                        Toast.makeText(this, "데이터 불러오기 실패", Toast.LENGTH_SHORT).show()
-                    }
+                }
             }
-        }
 
         AddContent.setOnClickListener {
             val SpecialIntent = Intent(this, Special_day_activity::class.java)
